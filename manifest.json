@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Auto Worklog Submitter",
+  "version": "1.0",
+  "description": "Automatically captures auth token and allows users to submit worklogs daily.",
+  "permissions": [
+    "storage",
+    "webRequest",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://*.kalvium.community/*",
+    "http://localhost:3000/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Auto Worklog Config"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.kalvium.community/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
+
