@@ -79,6 +79,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tasks.length === 0) {
             messageDiv.textContent = 'Error: Please add at least one task.';
             messageDiv.style.color = 'red';
+            // Visual feedback - shake or highlight container
+            tasksContainer.style.border = '1px solid red';
+            setTimeout(() => tasksContainer.style.border = 'none', 2000);
             return;
         }
 
