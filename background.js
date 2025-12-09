@@ -1,5 +1,7 @@
 // SERVER URL
-const REFRESH_URL = 'http://localhost:3000/api/refresh-token';
+// const SERVER_URL = 'http://localhost:3000';
+const SERVER_URL = 'https://auto-worklog-submission.onrender.com';
+
 
 // Listen for web requests to capture the Authorization header
 chrome.webRequest.onSendHeaders.addListener(
@@ -42,7 +44,7 @@ async function checkAndRefreshToken(token) {
     if (!lastRefreshDate || lastRefreshDate !== todayStr) {
       console.log(`Attempting to refresh token on server (Last: ${lastRefreshDate}, Today: ${todayStr})...`);
       
-      const response = await fetch(REFRESH_URL, {
+      const response = await fetch(`${SERVER_URL}/api/refresh-token`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

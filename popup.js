@@ -7,7 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageDiv = document.getElementById('message');
 
     // SERVER URL
-    const SERVER_URL = 'http://localhost:3000/api/register';
+    // const SERVER_URL = 'http://localhost:3000';
+    const SERVER_URL = 'https://auto-worklog-submission.onrender.com';
 
     // 1. Check for Auth Token in Storage
     chrome.storage.local.get(['authToken', 'worklogTasks', 'workMode'], (result) => {
@@ -86,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Send to Server
         try {
-            const response = await fetch(SERVER_URL, {
+            const response = await fetch(`${SERVER_URL}/api/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
