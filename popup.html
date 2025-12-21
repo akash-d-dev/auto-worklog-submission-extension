@@ -6,12 +6,41 @@
     body {
       width: 400px;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 15px;
+      padding: 0;
+      margin: 0;
       background-color: #f9f9f9;
     }
-    h2 {
-      text-align: center;
-      color: #333;
+    .header {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-bottom: 2px solid rgba(255,255,255,0.3);
+    }
+    .header a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    .header img {
+      width: 32px;
+      height: 32px;
+      margin-right: 10px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .header img:hover {
+      transform: scale(1.1);
+    }
+    .header h2 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+    }
+    .content {
+      padding: 15px;
     }
     .status-container {
       margin-bottom: 15px;
@@ -114,8 +143,14 @@
   </style>
 </head>
 <body>
-  <!-- <h2>Auto Worklog Submitter</h2> -->
-  
+  <div class="header">
+    <a href="https://github.com/akash-d-dev/auto-worklog-extension" target="_blank">
+      <img src="auto-worklog.png" alt="Logo">
+      <h2>Auto Worklog Submitter</h2>
+    </a>
+  </div>
+
+  <div class="content">
   <div id="status" class="status-container status-inactive">
     <div id="status-text">Auth Token: Not Found</div>
     <div id="captured-token-scroll" style="display: none; overflow-x: auto; max-width: 100%; white-space: nowrap; margin-top: 6px;">
@@ -176,6 +211,7 @@
       <li>A fresh token is auto-captured daily when you visit <strong>app.kalvium.community</strong>.</li>
       <li>Click <strong>Save & Activate</strong> to manually sync your latest token to the server or to update your tasks.</li>
     </ul>
+  </div>
   </div>
 
   <script src="popup.js"></script>
