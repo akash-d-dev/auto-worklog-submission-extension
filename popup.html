@@ -39,6 +39,22 @@
       font-weight: 600;
       color: white;
     }
+    .refresh-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.4);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-left: auto;
+      transition: all 0.2s;
+      width: auto;
+      margin-top: 0;
+    }
+    .refresh-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
     .content {
       padding: 15px;
     }
@@ -148,6 +164,7 @@
       <img src="auto-worklog.png" alt="Logo">
       <h2>Auto Worklog Submitter</h2>
     </a>
+    <button id="refresh-btn" class="refresh-btn" title="Refresh Data">Refresh</button>
   </div>
 
   <div class="content">
@@ -160,6 +177,16 @@
 
   <div class="info-text">
     Browse <a href="https://app.kalvium.community/livebooks?semester=1" target="_blank" style="color: #007bff; text-decoration: underline;">app.kalvium.community/livebooks</a> to capture your Auth Token automatically.
+  </div>
+
+  <div id="loading-indicator" style="display: none; text-align: center; color: #555; padding: 20px; font-weight: bold;">
+    Loading...
+</div>
+
+  <!-- User Not Found Section -->
+  <div id="user-not-found-section" style="display: none; margin-bottom: 15px; padding: 15px; border-radius: 6px; background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; text-align: center;">
+    <strong>User Not Found</strong>
+    <p style="margin: 5px 0 0 0; font-size: 13px;">Please click <strong>"Save & Activate"</strong> below to register.</p>
   </div>
 
   <!-- User Info Section -->
@@ -189,7 +216,7 @@
     <option value="Took an approved leave from work">Took an approved leave from work</option> -->
   </select>
 
-  <label>Worklog Tasks (Randomly selected daily)</label>
+  <label>Worklog Tasks (One task will be randomly selected for submission)</label>
   <div id="tasks-container">
     <textarea class="task-entry" placeholder="Task 1: e.g. Fixed bug in payment gateway..."></textarea>
     <textarea class="task-entry" placeholder="Task 2: e.g. Updated API documentation..."></textarea>
