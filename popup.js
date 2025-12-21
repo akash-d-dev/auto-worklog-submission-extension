@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const infoCreated = document.getElementById('info-created');
     const infoUpdated = document.getElementById('info-updated');
     const infoLastSubmitted = document.getElementById('info-last-submitted');
+    const infoUsingLatest = document.getElementById('info-using-latest');
 
     // SERVER URL
     const SERVER_URL = 'http://localhost:3000';
@@ -51,11 +52,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 userInfoSection.style.display = 'block';
                 infoEmail.textContent = data.email || '-';
                 // Collapse multiple asterisks to just "***"
-                const token = data.maskedToken || '-';
-                infoToken.textContent = token.replace(/^\*+/, '***');
+                const maskedToken = data.maskedToken || '-';
+                infoToken.textContent = maskedToken.replace(/^\*+/, '***');
                 infoCreated.textContent = formatDate(data.createdAt);
                 infoUpdated.textContent = formatDate(data.updatedAt);
                 infoLastSubmitted.textContent = data.lastSubmittedAt ? formatDate(data.lastSubmittedAt) : 'Never';
+                
+                // Compare captured token with server token
+                const visiblePart = maskedToken.replace(/^\*+/, ''); // Remove leading asterisks
+                const isLatest = authToken.includes(visiblePart);
+                infoUsingLatest.textContent = isLatest ? 'Yes' : "No (don't worry if updated today)";
+                infoUsingLatest.style.color = isLatest ? '#90EE90' : '#FFB6C1';
             } else {
                 // User not registered yet, hide the section
                 userInfoSection.style.display = 'none';
