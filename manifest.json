@@ -3,6 +3,12 @@
   "name": "Auto Worklog Submitter",
   "version": "1.0",
   "description": "Automatically captures auth token and allows users to submit worklogs daily.",
+  "icons": {
+    "16": "logo.png",
+    "32": "logo.png",
+    "48": "logo.png",
+    "128": "logo.png"
+  },
   "permissions": [
     "storage",
     "activeTab",
@@ -19,7 +25,12 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Auto Worklog Config"
+    "default_title": "Auto Worklog Config",
+    "default_icon": {
+      "16": "logo.png",
+      "32": "logo.png",
+      "48": "logo.png"
+    }
   },
   "content_scripts": [
     {
