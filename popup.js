@@ -293,13 +293,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     messageDiv.textContent = 'Success! User deactivated and data deleted.';
                     messageDiv.style.color = 'green';
                     
-                    // Optional: Clear local storage
+                    // Clear local storage completely
                     chrome.storage.local.clear(() => {
-                        // Refresh UI
+                        // Refresh UI to "User Not Found" state
                         statusText.textContent = 'Auth Token: Missing';
                         statusDiv.classList.remove('status-active');
+                        statusDiv.classList.add('status-inactive');
+                        
                         capturedTokenScroll.style.display = 'none';
                         userInfoSection.style.display = 'none';
+                        if (userNotFoundSection) userNotFoundSection.style.display = 'none';
+                        
                         tasksContainer.innerHTML = '';
                         addTaskTextarea();
                     });
