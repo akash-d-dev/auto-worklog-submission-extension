@@ -22,8 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const infoUsingLatest = document.getElementById('info-using-latest');
 
     // SERVER URL
-    const SERVER_URL = 'http://localhost:3000';
-    // const SERVER_URL = 'https://auto-worklog-submission.onrender.com';
+    // const SERVER_URL = 'http://localhost:3000';
+    const SERVER_URL = 'https://auto-worklog-submission.onrender.com';
 
     // Helper function to format date
     function formatDate(dateString) {

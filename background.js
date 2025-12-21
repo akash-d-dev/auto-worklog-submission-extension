@@ -1,6 +1,6 @@
 // SERVER URL
-const SERVER_URL = 'http://localhost:3000';
-// const SERVER_URL = 'https://auto-worklog-submission.onrender.com';
+// const SERVER_URL = 'http://localhost:3000';
+const SERVER_URL = 'https://auto-worklog-submission.onrender.com';
 
 // LISTEN FOR LONG-LIVED TOKEN FROM app.kalvium.community
 // This is the MAIN and ONLY way to capture tokens now.
