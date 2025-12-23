@@ -55,6 +55,7 @@ async function checkAndRefreshToken(token) {
     if (response.ok) {
         console.log('Token synced successfully to server.');
         // Update local storage so we don't hit server again today
+        // NOTE: Ideally we should use the server's response time, but local time is fine for this check
         const nowIso = new Date().toISOString();
         await chrome.storage.local.set({ lastServerUpdate: nowIso });
     } else {

@@ -66,22 +66,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 const maskedToken = data.maskedToken || '-';
                 infoToken.textContent = maskedToken.replace(/^\*+/, '***');
                 infoCreated.textContent = formatDate(data.createdAt);
-                infoUpdated.textContent = formatDate(data.updatedAt);
+                infoUpdated.textContent = formatDate(data.lastTokenRefreshedAt || data.updatedAt);
                 infoLastSubmitted.textContent = data.lastSubmittedAt ? formatDate(data.lastSubmittedAt) : 'Never';
                 
                 // Logic to check if we are using the latest token
-                // We compare the CURRENT date with the server's updated at date
-                // If the updated date is from today, then it is latest.
+                // We compare the CURRENT date with the server's lastTokenRefreshedAt date
+                // If the refresh date is from today, then it is latest.
                 let isLatest = false;
-                if (data.updatedAt) {
-                    const updatedAtDateStr = new Date(data.updatedAt).toISOString().split('T')[0];
+                const tokenRefreshDate = data.lastTokenRefreshedAt || data.updatedAt;
+                if (tokenRefreshDate) {
+                    const refreshedAtDateStr = new Date(tokenRefreshDate).toISOString().split('T')[0];
                     const todayDateStr = new Date().toISOString().split('T')[0];
                     
-                    if (updatedAtDateStr === todayDateStr) {
+                    if (refreshedAtDateStr === todayDateStr) {
                         isLatest = true;
                     }
                     // This allows background.js to check this date without hitting the API
-                    chrome.storage.local.set({ lastServerUpdate: data.updatedAt });
+                    chrome.storage.local.set({ lastServerUpdate: tokenRefreshDate });
                 }
                 
                 infoUsingLatest.textContent = isLatest ? 'Yes' : "No (don't worry if updated today)";
