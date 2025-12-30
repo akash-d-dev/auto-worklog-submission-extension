@@ -1,5 +1,5 @@
 // Bridge script running in ISOLATED world - listens for messages from MAIN world
-console.log('🔵 Auto Worklog: Content Bridge Active (Isolated World)')
+console.log('Auto Worklog: Content Bridge Active (Isolated World)')
 
 // Listen for messages from the MAIN world script
 window.addEventListener('message', (event) => {
@@ -11,7 +11,7 @@ window.addEventListener('message', (event) => {
     event.data.type === 'KALVIUM_TOKENS_CAPTURED' &&
     event.data.source === 'kalvium-worklog-extension'
   ) {
-    console.log('🔵 Auto Worklog: Bridge received tokens from page context')
+    console.log('Auto Worklog: Bridge received tokens from page context')
 
     // Forward to background script
     chrome.runtime.sendMessage({

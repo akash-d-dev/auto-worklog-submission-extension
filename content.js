@@ -1,5 +1,5 @@
 // Running in MAIN world - this script is part of the page context
-console.log('🔵 Auto Worklog: Token Interceptor Injected into Page Context')
+console.log('Auto Worklog: Token Interceptor Injected into Page Context')
 
 // Intercept fetch to capture token responses
 const originalFetch = window.fetch
@@ -14,14 +14,14 @@ window.fetch = async function (...args) {
     url.includes('auth.kalvium.community') &&
     url.includes('openid-connect/token')
   ) {
-    console.log('🟢 Auto Worklog: Detected token endpoint call!')
+    console.log('Auto Worklog: Detected token endpoint call!')
 
     try {
       const clonedResponse = response.clone()
       const data = await clonedResponse.json()
 
       if (data.access_token && data.refresh_token) {
-        console.log('✅ Auto Worklog: Tokens captured!', {
+        console.log('Auto Worklog: Tokens captured!', {
           accessTokenLength: data.access_token.length,
           refreshTokenLength: data.refresh_token.length,
           expiresIn: data.expires_in,
@@ -44,7 +44,7 @@ window.fetch = async function (...args) {
         )
       }
     } catch (e) {
-      console.error('❌ Auto Worklog: Error parsing token response:', e)
+      console.error('Auto Worklog: Error parsing token response:', e)
     }
   }
 
@@ -70,7 +70,7 @@ XMLHttpRequest.prototype.send = function (...args) {
       try {
         const data = JSON.parse(this.responseText)
         if (data.access_token && data.refresh_token) {
-          console.log('✅ Auto Worklog: Tokens captured via XHR!')
+          console.log('Auto Worklog: Tokens captured via XHR!')
 
           window.postMessage(
             {
@@ -87,11 +87,11 @@ XMLHttpRequest.prototype.send = function (...args) {
           )
         }
       } catch (e) {
-        console.error('❌ Auto Worklog: Error parsing XHR token response:', e)
+        console.error('Auto Worklog: Error parsing XHR token response:', e)
       }
     })
   }
   return originalXHRSend.apply(this, args)
 }
 
-console.log('🔵 Auto Worklog: Interceptors installed successfully')
+console.log('Auto Worklog: Interceptors installed successfully')

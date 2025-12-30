@@ -1,6 +1,6 @@
 // SERVER URL
-const SERVER_URL = 'http://localhost:3000'
-// const SERVER_URL = 'https://auto-worklog-submission.onrender.com'
+// const SERVER_URL = 'http://localhost:3000'
+const SERVER_URL = 'https://auto-worklog-submission.onrender.com'
 
 // Listen for tokens from content script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -10,7 +10,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 })
 
 async function handleTokenCapture(tokenData) {
-  const { accessToken, refreshToken, expiresIn, refreshExpiresIn } = tokenData
+  const { accessToken, refreshToken } = tokenData
 
   console.log('Background: Received tokens from content script')
 

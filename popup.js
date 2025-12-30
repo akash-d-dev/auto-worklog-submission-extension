@@ -20,8 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const messageDiv = document.getElementById('message')
   const loadingIndicator = document.getElementById('loading-indicator')
 
-  const SERVER_URL = 'http://localhost:3000'
-  // const SERVER_URL = 'https://auto-worklog-submission.onrender.com'
+  // const SERVER_URL = 'http://localhost:3000'
+  const SERVER_URL = 'https://auto-worklog-submission.onrender.com'
 
   function formatDate(dateString) {
     if (!dateString) return '-'
