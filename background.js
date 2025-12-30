@@ -4,61 +4,88 @@ const SERVER_URL = 'https://auto-worklog-submission.onrender.com';
 
 // Sync lock to prevent concurrent operations
 let syncInProgress = false;
-let pendingSync = null;
 
 // LISTEN FOR LONG-LIVED TOKEN FROM app.kalvium.community
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'SAVE_BETTER_CREDENTIALS') {
-    const newToken = message.token;
-    const capturedOn = new Date().toISOString();
-    
-    console.log('Received token from content script');
-    
-    // Save token to storage first, then trigger sync
-    chrome.storage.local.set({ 
-        authToken: newToken,
-        authTokenCapturedOn: capturedOn
-    }, async () => {
-        console.log('Token saved to storage at:', capturedOn);
-        
-        // Small delay to ensure storage is fully committed
-        await new Promise(resolve => setTimeout(resolve, 100));
-        
-        // Trigger sync - it will read the LATEST token from storage
-        scheduleSync();
-    });
+    handleTokenCapture(message.token);
   }
 });
 
+async function handleTokenCapture(newToken) {
+    const now = new Date();
+    const capturedOn = now.toISOString();
+    
+    console.log('Received token from content script');
+    
+    // 1. ALWAYS Update Local Storage with latest captured token
+    // We do this first to ensure the UI always shows the fresh state
+    await chrome.storage.local.set({ 
+        authToken: newToken,
+        authTokenCapturedOn: capturedOn
+    });
+    console.log('Local storage updated with latest token and timestamp.');
+
+    // 2. Fetch Server State to decide on Refresh
+    try {
+        const userInfoResponse = await fetch(`${SERVER_URL}/api/user-info`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ authToken: newToken })
+        });
+
+        if (userInfoResponse.status === 404) {
+            console.log('User not found on server. Waiting for manual registration.');
+            return;
+        }
+
+        if (!userInfoResponse.ok) {
+            console.error('Failed to fetch user info for decision.');
+            return;
+        }
+
+        const userData = await userInfoResponse.json();
+        
+        // 3. Decision Logic
+        // Inputs: 
+        // - isTokenMatch: boolean (from server)
+        
+        const isTokenMatch = userData.isTokenMatch;
+        console.log(`Decision Inputs - TokenMatch: ${isTokenMatch}`);
+
+        // Condition to Refresh:
+        // Only if Token Changed on Client (!isTokenMatch) -> MUST Update
+        
+        if (!isTokenMatch) {
+            console.log('Refresh condition met (Token Mismatch). triggering sync...');
+            scheduleSync();
+        } else {
+            console.log('Token matches server. No action.');
+        }
+
+    } catch (error) {
+        console.error('Error during decision phase:', error);
+    }
+}
+
 function scheduleSync() {
   if (syncInProgress) {
-    // A sync is running, mark that we need another sync after it completes
-    pendingSync = true;
-    console.log('Sync in progress, will retry after current sync completes');
+    console.log('Sync in progress, skipping duplicate request.');
     return;
   }
-  
   syncLatestTokenToServer();
 }
 
 async function syncLatestTokenToServer() {
   syncInProgress = true;
-  pendingSync = false;
   
   try {
-    // ALWAYS read the CURRENT token from storage right before syncing
-    const storageData = await chrome.storage.local.get(['authToken', 'lastSyncedToken']);
+    // Read latest from storage (guaranteed to be there from Step 1)
+    const storageData = await chrome.storage.local.get(['authToken']);
     const currentToken = storageData.authToken;
-    const lastSyncedToken = storageData.lastSyncedToken;
     
     if (!currentToken) {
-      console.log('No token in storage, nothing to sync');
-      return;
-    }
-    
-    // Skip if this exact token was already synced
-    if (currentToken === lastSyncedToken) {
-      console.log('Current token already synced, skipping');
+      console.log('No token in storage? Should not happen.');
       return;
     }
     
@@ -70,36 +97,24 @@ async function syncLatestTokenToServer() {
         body: JSON.stringify({ authToken: currentToken })
     });
 
+    const data = await response.json();
+
     if (response.ok) {
-        // Before marking as synced, verify the token hasn't changed during the API call
-        const verifyData = await chrome.storage.local.get(['authToken']);
-        
-        if (verifyData.authToken === currentToken) {
-          // Token is still the same, safe to mark as synced
-          await chrome.storage.local.set({ 
-            lastSyncedToken: currentToken,
-            lastServerUpdate: new Date().toISOString()
-          });
-          console.log('Token synced successfully');
-        } else {
-          // Token changed during sync, don't mark as synced - let the next sync handle it
-          console.log('Token changed during sync, will sync new token');
-          pendingSync = true;
+        console.log('Server Sync Response:', data);
+        if (data.updated) {
+            console.log('Token successfully updated/refreshed on server.');
+            // We can optionally update a local "lastServerUpdate" timestamp if needed for UI
+            await chrome.storage.local.set({ 
+                lastServerUpdate: new Date().toISOString()
+            });
         }
     } else {
-        const errData = await response.json().catch(() => ({}));
-        console.error('Failed to sync token:', errData);
+        console.error('Failed to sync token:', data);
     }
 
   } catch (error) {
     console.error('Error syncing token:', error);
   } finally {
     syncInProgress = false;
-    
-    // If a new token arrived while we were syncing, sync again
-    if (pendingSync) {
-      console.log('Processing pending sync...');
-      setTimeout(syncLatestTokenToServer, 200);
-    }
   }
 }
