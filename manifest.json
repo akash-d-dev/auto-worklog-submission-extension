@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Auto Worklog Submitter",
-  "version": "1.0",
-  "description": "Automatically captures auth token and allows users to submit worklogs daily.",
+  "version": "2.0",
+  "description": "Automatically captures auth tokens and allows users to submit worklogs daily.",
   "icons": {
     "16": "auto-worklog.png",
     "32": "auto-worklog.png",
@@ -12,11 +12,12 @@
   "permissions": [
     "storage",
     "activeTab",
-    "scripting"
+    "scripting",
+    "webRequest"
   ],
   "host_permissions": [
     "https://*.kalvium.community/*",
-    "https://app.kalvium.community/*",
+    "https://auth.kalvium.community/*",
     "http://localhost:3000/*",
     "https://auto-worklog-submission.onrender.com/*"
   ],
@@ -34,9 +35,23 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://*.kalvium.community/*"],
-      "js": ["content.js"]
+      "matches": [
+        "https://kalvium.community/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "https://kalvium.community/*"
+      ],
+      "js": [
+        "content-bridge.js"
+      ],
+      "run_at": "document_start"
     }
   ]
 }
-

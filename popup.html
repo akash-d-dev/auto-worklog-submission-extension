@@ -1,28 +1,32 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Auto Worklog Config</title>
   <style>
     body {
-      width: 400px;
+      width: 420px;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       padding: 0;
       margin: 0;
       background-color: #f9f9f9;
     }
+
     .header {
       display: flex;
       align-items: center;
       padding: 12px 15px;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
-      border-bottom: 2px solid rgba(255,255,255,0.3);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.3);
     }
+
     .header a {
       display: flex;
       align-items: center;
       text-decoration: none;
     }
+
     .header img {
       width: 32px;
       height: 32px;
@@ -30,18 +34,21 @@
       cursor: pointer;
       transition: transform 0.2s;
     }
+
     .header img:hover {
       transform: scale(1.1);
     }
+
     .header h2 {
       margin: 0;
       font-size: 16px;
       font-weight: 600;
       color: white;
     }
+
     .refresh-btn {
       background: transparent;
-      border: 1px solid rgba(255,255,255,0.4);
+      border: 1px solid rgba(255, 255, 255, 0.4);
       color: white;
       padding: 4px 8px;
       border-radius: 4px;
@@ -52,34 +59,143 @@
       width: auto;
       margin-top: 0;
     }
+
     .refresh-btn:hover {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
     }
+
     .content {
       padding: 15px;
     }
-    .status-container {
+
+    .token-status {
       margin-bottom: 15px;
-      padding: 10px;
-      border-radius: 5px;
-      background-color: #e0e0e0;
+      padding: 12px;
+      border-radius: 6px;
       text-align: center;
-      font-weight: bold;
     }
-    .status-active {
-      background-color: #d4edda;
+
+    .token-status.captured {
+      background: #d4edda;
       color: #155724;
     }
-    .status-inactive {
+
+    .token-status.missing {
       background-color: #f8d7da;
       color: #721c24;
     }
+
+    .token-status h3 {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+    }
+
+    .token-status .detail {
+      font-size: 11px;
+      opacity: 0.9;
+      margin: 4px 0;
+    }
+
+    .token-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      margin: 4px 0;
+      padding: 4px 8px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+
+    .token-row .label {
+      font-weight: 600;
+    }
+
+    .token-row .value {
+      opacity: 0.9;
+    }
+
+    .token-row .value.ok {
+      color: #90EE90;
+    }
+
+    .token-row .value.warn {
+      color: #FFD700;
+    }
+
+    .token-row .value.error {
+      color: #FFB6C1;
+    }
+
+
+    .token-display {
+      display: none;
+      margin-top: 8px;
+      padding: 8px;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 4px;
+    }
+
+    .token-display.show {
+      display: block;
+    }
+
+    .token-display-label {
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      opacity: 0.8;
+      color: #155724;
+    }
+
+    .token-scroll-container {
+      overflow-x: auto;
+      max-width: 100%;
+      white-space: nowrap;
+      background: rgba(0, 0, 0, 0.08);
+      padding: 6px 8px;
+      border-radius: 3px;
+      scrollbar-width: none;
+    }
+
+    .token-scroll-container:hover {
+      scrollbar-width: thin;
+    }
+
+    .token-scroll-container::-webkit-scrollbar {
+      height: 6px;
+      display: none;
+    }
+
+    .token-scroll-container:hover::-webkit-scrollbar {
+      display: block;
+    }
+
+    .token-scroll-container::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 3px;
+    }
+
+    .token-scroll-container::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 3px;
+    }
+
+    .token-value {
+      font-family: 'Courier New', monospace;
+      font-size: 9px;
+      word-break: break-all;
+      user-select: all;
+      color: #155724;
+    }
+
+
     label {
       display: block;
       margin-top: 10px;
       font-weight: 600;
       color: #555;
     }
+
     .task-entry {
       width: 100%;
       height: 60px;
@@ -91,6 +207,7 @@
       font-family: inherit;
       resize: vertical;
     }
+
     button {
       width: 100%;
       padding: 10px;
@@ -102,62 +219,55 @@
       font-size: 16px;
       margin-top: 10px;
     }
+
     button:hover {
       background-color: #0056b3;
     }
+
     .info-text {
-        font-size: 12px;
-        color: #777;
-        margin-bottom: 10px;
+      font-size: 12px;
+      color: #777;
+      margin-bottom: 10px;
     }
+
     #tasks-container {
-        margin-top: 5px;
+      margin-top: 5px;
     }
-    #token-scroll-container {
-        scrollbar-width: none; /* Firefox */
+
+    .user-info-section {
+      display: none;
+      margin-bottom: 15px;
+      padding: 12px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
     }
-    #token-scroll-container::-webkit-scrollbar {
-        height: 4px;
-        display: none; /* Chrome, Safari */
+
+    .user-info-section h4 {
+      margin: 0 0 10px 0;
+      font-size: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+      padding-bottom: 6px;
     }
-    #token-scroll-container:hover::-webkit-scrollbar {
-        display: block;
+
+    .user-info-section .info-row {
+      font-size: 12px;
+      line-height: 1.8;
     }
-    #token-scroll-container:hover {
-        scrollbar-width: thin; /* Firefox */
-    }
-    #token-scroll-container::-webkit-scrollbar-thumb {
-        background: rgba(255,255,255,0.5);
-        border-radius: 2px;
-    }
-    #captured-token-scroll {
-        scrollbar-width: none;
-        overflow-y: hidden;
-    }
-    #captured-token-scroll::-webkit-scrollbar {
-        height: 4px;
-        display: none;
-    }
-    #captured-token-scroll::-webkit-scrollbar:vertical {
-        display: none;
-        width: 0;
-    }
-    #captured-token-scroll:hover::-webkit-scrollbar {
-        display: block;
-    }
-    #captured-token-scroll:hover::-webkit-scrollbar:vertical {
-        display: none;
-        width: 0;
-    }
-    #captured-token-scroll:hover {
-        scrollbar-width: thin;
-    }
-    #captured-token-scroll::-webkit-scrollbar-thumb {
-        background: rgba(0,100,0,0.4);
-        border-radius: 2px;
+
+    .user-not-found {
+      display: none;
+      margin-bottom: 15px;
+      padding: 15px;
+      border-radius: 6px;
+      background-color: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+      text-align: center;
     }
   </style>
 </head>
+
 <body>
   <div class="header">
     <a href="https://github.com/akash-d-dev/auto-worklog-extension" target="_blank">
@@ -168,80 +278,92 @@
   </div>
 
   <div class="content">
-  <div id="status" class="status-container status-inactive">
-    <div id="status-text">Auth Token: Not Found</div>
-    <div id="captured-on-text" style="display: none; font-size: 11px; margin-top: 4px; opacity: 0.8; font-weight: normal;">Captured: <span id="captured-on-value">-</span></div>
-    <div id="captured-token-scroll" style="display: none; overflow-x: auto; max-width: 100%; white-space: nowrap; margin-top: 6px;">
-      <code id="captured-token-value" style="background: rgba(0,0,0,0.15); padding: 2px 6px; border-radius: 3px; font-size: 9px;">-</code>
-    </div>
-  </div>
+    <!-- Token Status Section -->
+    <div id="token-status" class="token-status missing">
+      <h3 id="token-status-title">Tokens: Not Captured</h3>
+      <div id="token-captured-on" class="detail" style="display: none;">Captured: <span id="captured-on-value">-</span>
+      </div>
 
-  <div class="info-text">
-    Browse <a href="https://app.kalvium.community/livebooks?semester=1" target="_blank" style="color: #007bff; text-decoration: underline;">app.kalvium.community/livebooks</a> to capture your Auth Token automatically.
-  </div>
-
-  <div id="loading-indicator" style="display: none; text-align: center; color: #555; padding: 20px; font-weight: bold;">
-    Loading...
-</div>
-
-  <!-- User Not Found Section -->
-  <div id="user-not-found-section" style="display: none; margin-bottom: 15px; padding: 15px; border-radius: 6px; background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; text-align: center;">
-    <strong>User Not Found</strong>
-    <p style="margin: 5px 0 0 0; font-size: 13px;">Please click <strong>"Save & Activate"</strong> below to register.</p>
-  </div>
-
-  <!-- User Info Section -->
-  <div id="user-info-section" style="display: none; margin-bottom: 15px; padding: 12px; border-radius: 6px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-    <h4 style="margin: 0 0 10px 0; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 6px;">User Info</h4>
-    <div style="font-size: 12px; line-height: 1.8;">
-      <div><strong>Email:</strong> <span id="info-email">-</span></div>
-      <div style="display: flex; align-items: center; gap: 6px;">
-        <strong>Token:</strong>
-        <div id="token-scroll-container" style="overflow-x: auto; max-width: 280px; white-space: nowrap;">
-          <code id="info-token" style="background: rgba(0,0,0,0.2); padding: 2px 6px; border-radius: 3px; font-size: 10px;">-</code>
+      <!-- Full Token Displays with Scrollbars -->
+      <div class="token-display" id="access-token-display">
+        <div class="token-display-label">Access Token:</div>
+        <div class="token-scroll-container">
+          <code class="token-value" id="access-token-full">-</code>
         </div>
       </div>
-      <div><strong>Registered:</strong> <span id="info-created">-</span></div>
-      <div><strong>Token Updated:</strong> <span id="info-updated">-</span></div>
-      <div><strong>Last Submitted:</strong> <span id="info-last-submitted">-</span></div>
-      <div><strong>Using Latest Captured Token:</strong> <span id="info-using-latest">-</span></div>
+
+      <div class="token-display" id="refresh-token-display">
+        <div class="token-display-label">Refresh Token:</div>
+        <div class="token-scroll-container">
+          <code class="token-value" id="refresh-token-full">-</code>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <label for="work-mode">Working Mode</label>
-  <select id="work-mode" style="width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #ccc;">
-    <option value="Working Remotely (Not in the Kalvium environment)" selected>Working Remotely (Not in the Kalvium environment)</option>
-    <option value="Working out of the Kalvium environment (Classroom)">Working out of the Kalvium environment (Classroom)</option>
-    <option value="Working on-site (Company location)">Working on-site (Company location)</option>
-    <!-- <option value="Today was a company Holiday">Today was a company Holiday</option>
-    <option value="Took an approved leave from work">Took an approved leave from work</option> -->
-  </select>
+    <div class="info-text">
+      Browse <a href="https://kalvium.community/" target="_blank"
+        style="color: #007bff; text-decoration: underline;">kalvium.community</a> and log in to capture your tokens
+      automatically.
+    </div>
 
-  <label>Worklog Tasks (One task will be randomly selected for submission)</label>
-  <div id="tasks-container">
-    <textarea class="task-entry" placeholder="Task 1: e.g. Fixed bug in payment gateway..."></textarea>
-    <textarea class="task-entry" placeholder="Task 2: e.g. Updated API documentation..."></textarea>
-    <textarea class="task-entry" placeholder="Task 3: e.g. Team meeting and sprint planning..."></textarea>
-  </div>
-  
-  <button id="add-task-btn" style="background-color: #28a745; margin-bottom: 10px;">+ Add Another Task</button>
-  
-  <button id="save-btn">Save & Activate</button>
+    <div id="loading-indicator"
+      style="display: none; text-align: center; color: #555; padding: 20px; font-weight: bold;">
+      Loading...
+    </div>
 
-  <button id="deactivate-btn" style="background-color: #dc3545; margin-top: 10px;">Deactivate & Delete</button>
-  
-  <div id="message" style="margin-top: 10px; text-align: center;"></div>
+    <!-- User Not Found Section -->
+    <div id="user-not-found-section" class="user-not-found">
+      <strong>User Not Registered</strong>
+      <p style="margin: 5px 0 0 0; font-size: 13px;">Please click <strong>"Save & Activate"</strong> below to register.
+      </p>
+    </div>
 
-  <div style="margin-top: 20px; padding: 10px; background: #f5f5f5; border-radius: 6px; border-left: 3px solid #2196f3; font-size: 11px; color: #555; line-height: 1.6;">
-    <strong style="color: #1976d2;">Token Info:</strong>
-    <ul style="margin: 6px 0 0 0; padding-left: 18px;">
-      <li>Your token expires after <strong>~1 month</strong>.</li>
-      <li>A fresh token is auto-captured daily when you visit <strong>app.kalvium.community</strong>.</li>
-      <li>Click <strong>Save & Activate</strong> to manually sync your latest token to the server or to update your tasks.</li>
-    </ul>
-  </div>
+    <!-- User Info Section -->
+    <div id="user-info-section" class="user-info-section">
+      <h4>User Info</h4>
+      <div class="info-row">
+        <div><strong>Email:</strong> <span id="info-email">-</span></div>
+        <div><strong>Registered:</strong> <span id="info-created">-</span></div>
+        <div><strong>Last Submitted:</strong> <span id="info-last-submitted">-</span></div>
+      </div>
+    </div>
+
+    <label for="work-mode">Working Mode</label>
+    <select id="work-mode"
+      style="width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #ccc;">
+      <option value="Working Remotely (Not in the Kalvium environment)" selected>Working Remotely (Not in the Kalvium
+        environment)</option>
+      <option value="Working out of the Kalvium environment (Classroom)">Working out of the Kalvium environment
+        (Classroom)</option>
+      <option value="Working on-site (Company location)">Working on-site (Company location)</option>
+    </select>
+
+    <label>Worklog Tasks (One task will be randomly selected for submission)</label>
+    <div id="tasks-container">
+      <textarea class="task-entry" placeholder="Task 1: e.g. Fixed bug in payment gateway..."></textarea>
+    </div>
+
+    <button id="add-task-btn" style="background-color: #28a745; margin-bottom: 10px;">+ Add Another Task</button>
+
+    <button id="save-btn">Save & Activate</button>
+
+    <button id="deactivate-btn" style="background-color: #dc3545; margin-top: 10px;">Deactivate & Delete</button>
+
+    <div id="message" style="margin-top: 10px; text-align: center;"></div>
+
+    <div
+      style="margin-top: 20px; padding: 10px; background: #f5f5f5; border-radius: 6px; border-left: 3px solid #2196f3; font-size: 11px; color: #555; line-height: 1.6;">
+      <strong style="color: #1976d2;">How it works:</strong>
+      <ul style="margin: 6px 0 0 0; padding-left: 18px;">
+        <li>Your tokens are captured when you log in to <strong>kalvium.community</strong>.</li>
+        <li>Click <strong>Save & Activate</strong> to send tokens to the server.</li>
+        <li>The server automatically refreshes tokens when needed.</li>
+        <li>Worklogs are submitted daily at 7:00 PM IST.</li>
+      </ul>
+    </div>
   </div>
 
   <script src="popup.js"></script>
 </body>
+
 </html>
