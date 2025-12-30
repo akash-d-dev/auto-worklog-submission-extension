@@ -127,12 +127,48 @@
     }
 
 
+    .token-status {
+      margin-bottom: 13px;
+      padding: 14px;
+      border-radius: 7px;
+      border: 1px solid #c3e6cb;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .token-status.captured {
+      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+      color: #155724;
+    }
+
+    .token-status.missing {
+      background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+      color: #721c24;
+      border-color: #f5c6cb;
+    }
+
+    .token-status h3 {
+      margin: 0 0 8px 0;
+      font-size: 15px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .token-status .detail {
+      font-size: 11px;
+      opacity: 0.85;
+      margin: 5px 0;
+      text-align: center;
+      font-weight: 500;
+    }
+
     .token-display {
       display: none;
-      margin-top: 8px;
-      padding: 8px;
-      background: rgba(0, 0, 0, 0.05);
-      border-radius: 4px;
+      margin-top: 10px;
+      padding: 9px;
+      background: #fff;
+      border-radius: 5px;
+      border: 1px solid rgba(21, 87, 36, 0.2);
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
     .token-display.show {
@@ -141,28 +177,31 @@
 
     .token-display-label {
       font-size: 11px;
-      font-weight: 600;
-      margin-bottom: 4px;
-      opacity: 0.8;
+      font-weight: 700;
+      margin-bottom: 5px;
       color: #155724;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
     }
 
     .token-scroll-container {
       overflow-x: auto;
       max-width: 100%;
       white-space: nowrap;
-      background: rgba(0, 0, 0, 0.08);
-      padding: 6px 8px;
-      border-radius: 3px;
+      background: #f8f9fa;
+      padding: 8px 10px;
+      border-radius: 4px;
+      border: 1px solid #dee2e6;
       scrollbar-width: none;
     }
 
     .token-scroll-container:hover {
       scrollbar-width: thin;
+      background: #e9ecef;
     }
 
     .token-scroll-container::-webkit-scrollbar {
-      height: 6px;
+      height: 7px;
       display: none;
     }
 
@@ -171,21 +210,23 @@
     }
 
     .token-scroll-container::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 3px;
+      background: #6c757d;
+      border-radius: 4px;
     }
 
     .token-scroll-container::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.05);
-      border-radius: 3px;
+      background: #dee2e6;
+      border-radius: 4px;
     }
 
     .token-value {
-      font-family: 'Courier New', monospace;
-      font-size: 9px;
+      font-family: 'SF Mono', 'Monaco', 'Consolas', 'Courier New', monospace;
+      font-size: 10px;
+      line-height: 1.4;
       word-break: break-all;
       user-select: all;
-      color: #155724;
+      color: #212529;
+      font-weight: 500;
     }
 
 
@@ -356,7 +397,7 @@
       <strong style="color: #1976d2;">How it works:</strong>
       <ul style="margin: 6px 0 0 0; padding-left: 18px;">
         <li>Your tokens are captured when you log in to <strong>kalvium.community</strong>.</li>
-        <li>Click <strong>Save & Activate</strong> to send tokens to the server.</li>
+        <li>Click <strong>Save & Activate</strong> to send tokens to the server or to register your account.</li>
         <li>The server automatically refreshes tokens when needed.</li>
         <li>Worklogs are submitted daily at 7:00 PM IST.</li>
       </ul>
