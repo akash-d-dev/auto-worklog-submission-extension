@@ -60,11 +60,21 @@ Since this is a custom extension, you need to load it into Chrome manually (Deve
 
 ### 3. How Token Refresh Works
 
+- The system runs the automated submission process **every weekday (Mon-Fri) around 7:00 PM IST**.
 - Your **access token** expires after approximately 3 days.
 - Your **refresh token** is valid for approximately 6 days.
 - The server automatically checks token expiry before each submission.
 - If your access token expires within 24 hours, the server uses your refresh token to get fresh tokens.
-- You only need to log in again if your refresh token expires (Rare exception).
+
+> **CRITICAL:** Do NOT manually log out of the Kalvium Community website. Logging out invalidates your refresh token immediately.
+>
+> If your session expires for any reason (e.g., manual logout, server-side expiry, or security change), the auto-submission will fail. You will receive a "FAILED" email notification alerting you to this.
+>
+> **If you receive this alert:**
+> 1. Log in to the Kalvium Community website.
+> 2. Open this extension popup.
+> 3. Click "Save and Activate" to store your new valid tokens.
+
 
 ### 4. Monitoring
 
