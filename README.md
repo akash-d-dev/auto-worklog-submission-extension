@@ -68,7 +68,7 @@ Since this is a custom extension, you need to load it into Chrome manually (Deve
 
 > **CRITICAL:** Do NOT manually log out of the Kalvium Community website. Logging out invalidates your refresh token immediately.
 >
-> If your session expires for any reason (e.g., manual logout, server-side expiry, or security change), the auto-submission will fail. You will receive a "FAILED" email notification alerting you to this.
+> If your session expires for any reason (e.g., manual logout, server-side expiry, or security change), the auto-submission will fail. You will receive a "FAILED" email notification alerting you to this one day in advance.
 >
 > **If you receive this alert:**
 > 1. Log in to the Kalvium Community website.
