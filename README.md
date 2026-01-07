@@ -64,7 +64,7 @@ Since this is a custom extension, you need to load it into Chrome manually (Deve
 - Your **refresh token** is valid for approximately 6 days.
 - The server automatically checks token expiry before each submission.
 - If your access token expires within 24 hours, the server uses your refresh token to get a new one.
-- You only need to log in again if your refresh token expires (approximately every 6 days).
+- You only need to log in again if your refresh token expires (Rare exception).
 
 ### 4. Monitoring
 
