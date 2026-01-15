@@ -1,4 +1,4 @@
-# Auto Worklog Submitter for Kalvium v2
+# Auto Worklog Submitter for Kalvium [v2](#-updates)
 
 **Auto Worklog Submitter** is a Chrome extension designed to automate the daily routine of submitting worklogs on the Kalvium Community platform.
 
@@ -26,6 +26,12 @@ Instead of manually navigating to the portal every evening, this extension captu
 3. **Synchronization**: Clicking "Save & Activate" sends your tokens, Work Mode, and Tasks to the backend server.
 4. **Automatic Token Refresh**: When your access token is about to expire (within 24 hours), the backend automatically uses your refresh token to obtain a new access token.
 5. **Execution**: The backend runs a scheduled job daily at 7:00 PM IST. It retrieves your user profile, picks a random task, and submits it to the Kalvium Student API.
+
+## 🧾 Updates
+
+**v2**
+
+- Added automatic saving of the latest tokens when you log in to `kalvium.community`, so your session stays alive and submissions keep working.
 
 ## 📥 Installation
 
@@ -68,11 +74,11 @@ Since this is a custom extension, you need to load it into Chrome manually (Deve
 
 > **CRITICAL:** Do NOT manually log out of the Kalvium Community website. Logging out invalidates your refresh token immediately.
 >
-> If your session expires for any reason (e.g., manual logout, server-side expiry, or security change), the auto-submission will fail. You will receive a "FAILED" email notification alerting you to this one day in advance.
+> If you log in again and the latest tokens are not captured, the old session tokens will stop working and the auto-submission will fail. The same applies if your session expires for any reason (e.g., manual logout, server-side expiry, or security change). You will receive a "FAILED" email notification alerting you to this one day in advance.
 >
 > **If you receive this alert:**
 > 1. Log in to the Kalvium Community website.
-> 2. Open this extension popup.
+> 2. Open this extension popup to ensure the latest tokens are captured.
 > 3. Click "Save and Activate" to store your new valid tokens.
 
 
