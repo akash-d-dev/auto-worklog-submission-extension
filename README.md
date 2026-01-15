@@ -1,4 +1,4 @@
-# Auto Worklog Submitter for Kalvium
+# Auto Worklog Submitter for Kalvium v2
 
 **Auto Worklog Submitter** is a Chrome extension designed to automate the daily routine of submitting worklogs on the Kalvium Community platform.
 
