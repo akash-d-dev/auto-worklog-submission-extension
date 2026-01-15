@@ -52,13 +52,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const data = await chrome.storage.local.get([
       'accessToken',
       'refreshToken',
-      'tokensCapturedOn'
+      'tokensCapturedOn',
+      'lastTokenSyncStatus',
+      'lastTokenSyncOn',
+      'lastTokenSyncError'
     ])
 
     const accessTokenDisplay = document.getElementById('access-token-display')
     const refreshTokenDisplay = document.getElementById('refresh-token-display')
     const accessTokenFull = document.getElementById('access-token-full')
     const refreshTokenFull = document.getElementById('refresh-token-full')
+    const tokenSyncInfo = document.getElementById('token-sync-info')
+    const tokenSyncStatus = document.getElementById('token-sync-status')
+    const tokenSyncOn = document.getElementById('token-sync-on')
 
     if (data.accessToken && data.refreshToken) {
       tokenStatusDiv.classList.remove('missing')
@@ -67,6 +73,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
       tokenCapturedOn.style.display = 'block'
       capturedOnValue.textContent = formatDate(data.tokensCapturedOn)
+
+      if (data.lastTokenSyncStatus) {
+        tokenSyncInfo.style.display = 'block'
+        tokenSyncStatus.textContent = getSyncStatusText(
+          data.lastTokenSyncStatus,
+          data.lastTokenSyncError
+        )
+        tokenSyncOn.textContent = data.lastTokenSyncOn
+          ? `(${formatDate(data.lastTokenSyncOn)})`
+          : ''
+      } else {
+        tokenSyncInfo.style.display = 'none'
+      }
 
       // Show full tokens
       accessTokenDisplay.classList.add('show')
@@ -80,9 +99,25 @@ document.addEventListener('DOMContentLoaded', () => {
       tokenStatusDiv.classList.add('missing')
       tokenStatusTitle.textContent = 'Tokens: Not Captured'
       tokenCapturedOn.style.display = 'none'
+      tokenSyncInfo.style.display = 'none'
       accessTokenDisplay.classList.remove('show')
       refreshTokenDisplay.classList.remove('show')
       return null
+    }
+  }
+
+  function getSyncStatusText(status, errorMessage) {
+    switch (status) {
+      case 'synced':
+        return 'Synced'
+      case 'syncing':
+        return 'Syncing...'
+      case 'not_registered':
+        return 'Waiting for activation'
+      case 'failed':
+        return errorMessage ? `Failed: ${errorMessage}` : 'Failed'
+      default:
+        return 'Unknown'
     }
   }
 
@@ -201,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      const response = await fetch(`${SERVER_URL}/api/register`, {
+      const response = await fetch(`${SERVER_URL}/api/user`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
