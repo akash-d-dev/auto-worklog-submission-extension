@@ -16,7 +16,7 @@ Instead of manually navigating to the portal every evening, this extension captu
   - Working On-site (Company Location)
 - **Email Reports**: Receive daily status emails confirming success or alerting you to any issues.
   
-<img width="444" height="616" alt="image" src="https://github.com/user-attachments/assets/95798dc8-b369-44a6-9eb5-2a048b76fbdd" />
+<img width="442" height="607" alt="image" src="https://github.com/user-attachments/assets/e8cff2c9-8e2e-42c0-b578-31103639d6a4" />
 <img width="445" height="610" alt="image" src="https://github.com/user-attachments/assets/1261281a-362f-41a4-929b-0c4dcc1f3777" />
 
 ## 🛠️ How It Works
